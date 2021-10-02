@@ -3,6 +3,8 @@ from tkinter import Tk, Button, filedialog, messagebox, Menu
 from typing import Text
 #Libreria creada
 from PartesAnalizador import ErrorLexico, Token
+#Libreria para abrir directamente los reportes
+import webbrowser
 
 
 #=================================================Variables globales=================================================
@@ -68,7 +70,11 @@ def analizarArchivo(entrada):
     #For inicial para ver caracter por caracter
     for c in entrada: 
         cter = ord(c)
-        if estado == 0:
+
+        if c == "~": #Si ya se termino el archivo
+            pass
+
+        elif estado == 0:
             if c == "'" or estadoComilla == True:
                 if c == "'":
                     contComillaSimple += 1
@@ -138,12 +144,17 @@ def analizarArchivo(entrada):
                         lexActual = ""
                         estado = 0 
             else: # Si el caracter no cumple con ningun estado inicial
-                #Crear error
-                errorLexico = ErrorLexico(c,fila,(columna-(len(lexActual)-1)), "Sintax error: caracter invalido")
-                listaErrores.append(errorLexico)
-                estadoError = True
-                lexActual = ""
-                estado = 0 
+                # Espacio - Salto de línea - TAB
+                if cter == 32 or cter == 10 or cter == 9:
+                    lexActual = ""
+                    estado = 0
+                else:
+                    #Crear error
+                    errorLexico = ErrorLexico(c,fila,(columna-(len(lexActual)-1)), "Sintax error: caracter invalido")
+                    listaErrores.append(errorLexico)
+                    estadoError = True
+                    lexActual = ""
+                    estado = 0 
         
         #Comentario multilinea
         elif estado == 1:
@@ -240,15 +251,35 @@ def analizarArchivo(entrada):
         #Digito
         elif estado == 7:
             lexActual += c
-            if isNumero(c):
-                if isNumero(entrada[cont + 1]):
-                    estado = 7
-                else:#crear token digito
+            if isNumero(c) or cter == 46: #Si el caracter es un numero o un punto
+                if cter == 46:#Si el caracter es un punto
+                    estado = 8
+                elif isNumero(entrada[cont + 1]) or (ord(entrada[cont + 1]) == 46):#Si el siguiente es un numero y no hay un punto
+                    pass
+                else:#crear token digito si el siguiente caracter no es un numero entonces hay que aceptar
                     token = Token("Digito", lexActual, "Digito = (-)?Di+(.Di+)?", fila, (columna-(len(lexActual)-1)))
                     listaTokens.append(token)
                     lexActual = "" 
                     estado = 0
             else:#Crear error
+                errorLexico = ErrorLexico(c,fila,(columna-(len(lexActual)-1)), "Sintax error: se esperaba un numero")
+                listaErrores.append(errorLexico)
+                estadoError = True
+                lexActual = ""
+                estado = 0
+
+        #Digito despues del punto
+        elif estado == 8:
+            lexActual += c
+            if isNumero(c):
+                if isNumero(entrada[cont + 1]):
+                    pass
+                else: #Creamos token aceptacion estado 9
+                    token = Token("Digito", lexActual, "Digito = (-)?Di+(.Di+)?", fila, (columna-(len(lexActual)-1)))
+                    listaTokens.append(token)
+                    lexActual = "" 
+                    estado = 0
+            else: # Si no es un numero despues del punto es un error
                 errorLexico = ErrorLexico(c,fila,(columna-(len(lexActual)-1)), "Sintax error: se esperaba un numero")
                 listaErrores.append(errorLexico)
                 estadoError = True
@@ -264,6 +295,7 @@ def analizarArchivo(entrada):
         elif cter == 32:
             columna += 1
 
+        cont += 1
         columna += 1
             
             
@@ -296,8 +328,9 @@ class VentanaMenu:
         self.menuPrincipal = Menu(self.miMenu)
         self.miMenu.add_command(label="Cargar Archivo", command=self.cargarArchivo)
         self.miMenu.add_command(label="Analizar", command=self.on_closing)
+        self.miMenu.add_command(label="Generar Reportes", command=self.generarReportes)
 
-
+        
 
 
         self.ventana.mainloop()
@@ -308,10 +341,183 @@ class VentanaMenu:
             self.ventana.quit()
 
     def cargarArchivo(self):
+        global listaErrores
+        global listaTokens
+        global estadoError
         self.txt = None
         self.txt = abrirArchivo()
         if self.txt != None:
             self.txt += "~"
             print(self.txt)
-        
+            analizarArchivo(self.txt)
+            print(listaTokens)
+
+    def generarReportes(self):
+        if(self.txt != None):
+            #abrir o crear el reporte
+            f = open('ReporteTokens.html','w', encoding='utf-8')
+            #Cuerpo del documento
+            cuerpo = '''<!doctype html>
+            <html lang="en">
+
+            <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!-- Bootstrap CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+            <title>Reporte de Tokens</title>
+            </head>
+
+            <body style="background-color: lightseagreen;">
+            <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1>REPORTE DE TOKENS</h1>
+                </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="background-color: rgb(255, 255, 255); ">
+                
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <h2 style="text-decoration: underline tomato;">Tabla de tokens</h2>
+                </div>
+                </div>
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <table class="table table-bordered table-striped text-center table-hover table-responsive"
+                    style="text-align: center; width: 600px;">
+                    <thead>
+                        <tr class="table-dark">
+                        <th>Token</th>
+                        <th>Lexema</th>
+                        <th>Patrón</th>
+                        <th>Fila</th>
+                        <th>Columna</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    '''  
+            for i in listaTokens:
+                cuerpo += f'''
+                            <tr>
+                            <td class="table-success">{i.token}</td>
+                            <td class="table-success">{i.lexema}</td>
+                            <td class="table-success">{i.expresion}</td>
+                            <td class="table-success">{i.fila}</td>
+                            <td class="table-success">{i.columna}</td>
+                            </tr>
+                            '''
+    
+    
+            cuerpo += '''
+                </tbody>
+                </table>
+                </div>
+                </div>
+                <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1></h1>
+                </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+            </body>
+
+            </html>'''
+
+            f.write(cuerpo)
+            f.close
+            #Aquí se hace la magia de abrirlo automaticamente
+            webbrowser.open_new_tab('ReporteTokens.html')
+            f = open('ReporteErrores.html','w',encoding='utf-8')
+            
+            #Cuerpo del documento
+            cuerpo = '''<!doctype html>
+            <html lang="en">
+
+            <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!-- Bootstrap CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+            <title>Reporte de Tokens</title>
+            </head>
+
+            <body style="background-color: lightseagreen;">
+            <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1>REPORTE DE ERRORES</h1>
+                </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="background-color: rgb(255, 255, 255); ">
+                
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <h2 style="text-decoration: underline tomato;">Tabla de errores léxicos</h2>
+                </div>
+                </div>
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <table class="table table-bordered table-striped text-center table-hover table-responsive"
+                    style="text-align: center; width: 600px;">
+                    <thead>
+                        <tr class="table-dark">
+                        <th>Caracter</th>
+                        <th>Fila</th>
+                        <th>Columna</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    '''  
+            for i in listaErrores:
+                cuerpo += f'''
+                            <tr>
+                            <td class="table-success">{i.caracter}</td>
+                            <td class="table-success">{i.fila}</td>
+                            <td class="table-success">{i.columna}</td>
+                            <td class="table-success">{i.mensaje}</td>
+                            </tr>
+                            '''
+    
+    
+            cuerpo += '''
+                </tbody>
+                </table>
+                </div>
+                </div>
+                <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1></h1>
+                </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+            </body>
+
+            </html>'''
+
+            f.write(cuerpo)
+            f.close
+            webbrowser.open_new_tab('ReporteErrores.html')
+            
+        else:
+            print("No se ha cargado ningun archivo")
+            messagebox.showwarning('ADVERTENCIA', 'No se selecciono ningun archivo.')
     

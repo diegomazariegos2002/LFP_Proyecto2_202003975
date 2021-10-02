@@ -1,0 +1,928 @@
+<!doctype html>
+            <html lang="en">
+
+            <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!-- Bootstrap CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+            <title>Reporte de Tokens</title>
+            </head>
+
+            <body style="background-color: lightseagreen;">
+            <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1>REPORTE DE TOKENS</h1>
+                </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="background-color: rgb(255, 255, 255); ">
+                
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <h2 style="text-decoration: underline tomato;">Tabla de tokens</h2>
+                </div>
+                </div>
+                <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <table class="table table-bordered table-striped text-center table-hover table-responsive"
+                    style="text-align: center; width: 600px;">
+                    <thead>
+                        <tr class="table-dark">
+                        <th>Token</th>
+                        <th>Lexema</th>
+                        <th>Patrón</th>
+                        <th>Fila</th>
+                        <th>Columna</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">Claves</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">1</td>
+                            <td class="table-success">0</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">=</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">1</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">[</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">1</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"codigo"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">14</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"producto"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">17</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">27</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"precio_compra"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">30</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">45</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"precio_venta"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">3</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">3</td>
+                            <td class="table-success">20</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"stock"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">3</td>
+                            <td class="table-success">23</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">]</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">4</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">Registros</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">5</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">=</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">5</td>
+                            <td class="table-success">12</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">[</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">5</td>
+                            <td class="table-success">15</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">{</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">1</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"Barbacoa"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">21</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">10.50</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">24</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">29</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">20.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">32</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">37</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">40</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">}</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">6</td>
+                            <td class="table-success">41</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">{</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">2</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"Salsa"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">18</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">13.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">21</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">26</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">16.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">29</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">34</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">37</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">}</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">7</td>
+                            <td class="table-success">38</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">{</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">3</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"Mayonesa"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">21</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">15.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">24</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">29</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">18.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">32</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">37</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">40</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">}</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">8</td>
+                            <td class="table-success">41</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">{</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">4</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"Mostaza"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">20</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">14.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">23</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">28</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">16.00</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">31</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">36</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">4</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">39</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">}</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">9</td>
+                            <td class="table-success">40</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">]</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">10</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Comentario de una sola línea</td>
+                            <td class="table-success"># Comentarios</td>
+                            <td class="table-success">Let = [A_Z, a_z,\.t, _] -> #(Let)*(\.n)</td>
+                            <td class="table-success">11</td>
+                            <td class="table-success">3</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Comentario multilinea</td>
+                            <td class="table-success">'''
+comentario multilinea
+''''</td>
+                            <td class="table-success">LeT = [A_Z, a_z, \.n, \.t, \.r, _] -> '''(LeT)*'''</td>
+                            <td class="table-success">14</td>
+                            <td class="table-success">-26</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">imprimir</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">15</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">15</td>
+                            <td class="table-success">9</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">15</td>
+                            <td class="table-success">10</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">15</td>
+                            <td class="table-success">18</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">15</td>
+                            <td class="table-success">19</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">imprimirln</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">16</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">16</td>
+                            <td class="table-success">11</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">16</td>
+                            <td class="table-success">12</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">16</td>
+                            <td class="table-success">20</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">16</td>
+                            <td class="table-success">21</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">conteo</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">17</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">17</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">17</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">17</td>
+                            <td class="table-success">9</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">promedio</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">18</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">18</td>
+                            <td class="table-success">9</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">18</td>
+                            <td class="table-success">10</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">18</td>
+                            <td class="table-success">18</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">18</td>
+                            <td class="table-success">19</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">contarsi</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">9</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">10</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">,</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">18</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Digito</td>
+                            <td class="table-success">0</td>
+                            <td class="table-success">Digito = (-)?Di+(.Di+)?</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">19</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">20</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">19</td>
+                            <td class="table-success">21</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">datos</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">20</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">20</td>
+                            <td class="table-success">6</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">20</td>
+                            <td class="table-success">7</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">20</td>
+                            <td class="table-success">8</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">max</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">21</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">21</td>
+                            <td class="table-success">4</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">21</td>
+                            <td class="table-success">5</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">21</td>
+                            <td class="table-success">13</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">21</td>
+                            <td class="table-success">14</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">min</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">22</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">22</td>
+                            <td class="table-success">4</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">22</td>
+                            <td class="table-success">5</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">22</td>
+                            <td class="table-success">13</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">22</td>
+                            <td class="table-success">14</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Palabra reservada</td>
+                            <td class="table-success">exportarReporte</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">23</td>
+                            <td class="table-success">1</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">(</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">23</td>
+                            <td class="table-success">16</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Cadena</td>
+                            <td class="table-success">"cadena"</td>
+                            <td class="table-success">Le = [A_Z, a_z] -> Palabra = Le+</td>
+                            <td class="table-success">23</td>
+                            <td class="table-success">17</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">)</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">23</td>
+                            <td class="table-success">25</td>
+                            </tr>
+                            
+                            <tr>
+                            <td class="table-success">Simbolo</td>
+                            <td class="table-success">;</td>
+                            <td class="table-success">Sim = (=, [,],’,’, {,}, (,),’;’)</td>
+                            <td class="table-success">23</td>
+                            <td class="table-success">26</td>
+                            </tr>
+                            
+                </tbody>
+                </table>
+                </div>
+                </div>
+                <div class="container-fluid container p-3 my-3 bg-dark text-white">
+                <div class="row">
+                <div class="col-12" style="text-align: center; ">
+                    <h1></h1>
+                </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+            </body>
+
+            </html>
