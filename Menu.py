@@ -1,5 +1,6 @@
 #Libreria para interfaz grafica
-from tkinter import Tk, Button, filedialog, messagebox, Menu
+from tkinter import Tk, Button, filedialog, messagebox, Menu, scrolledtext
+import tkinter
 from typing import Text
 #Libreria creada
 from PartesAnalizador import ErrorLexico, Token
@@ -330,8 +331,19 @@ class VentanaMenu:
         self.miMenu.add_command(label="Analizar", command=self.on_closing)
         self.miMenu.add_command(label="Generar Reportes", command=self.generarReportes)
 
-        
+        #scrolledtext       
+        self.text_Area1 = scrolledtext.ScrolledText(self.ventana,
+                                                    wrap = tkinter.WORD,
+                                                    width = 30, 
+                                                    height = 13, 
+                                                    font = ("Times New Roman",
+                                                        15))
+        self.text_Area1.configure(state = 'normal')
+        self.text_Area1.place(x=10, y = 90) 
 
+        #Buttons
+        self.btnProcesar = Button(self.ventana, text="Abrir archivo", command=self.cargarArchivo)
+        self.btnProcesar.place(x=400, y = 10)
 
         self.ventana.mainloop()
 
