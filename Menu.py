@@ -27,6 +27,7 @@ def abrirArchivo():
     )
     if archivo is None:
         print('No se seleccionó ningun archivo\n')
+        messagebox.showwarning('ADVERTENCIA', 'No se seleccionó ningun archivo.')
         return None
     else:
         texto = archivo.read()
@@ -306,7 +307,7 @@ class VentanaMenu:
         self.ventana = Tk()
         self.ventana.title("Menu Principal")
         #Posicionar ventana en el centro
-        self.ancho_ventana = 1300
+        self.ancho_ventana = 1033
         self.alto_ventana = 500
 
         self.x_ventana = self.ventana.winfo_screenwidth() // 2 - self.ancho_ventana // 2
@@ -315,7 +316,7 @@ class VentanaMenu:
         self.posicion = str(self.ancho_ventana) + "x" + str(self.alto_ventana) + "+" + str(self.x_ventana) + "+" + str(self.y_ventana)
         self.ventana.geometry(self.posicion)
 
-        self.ventana.configure(bg = 'sky blue')
+        self.ventana.configure(bg = 'gray')
         self.ventana.resizable(False, False)
 
         #Por medio de esto accedo a lo que sucede al dar click sobre la X para cerrar la ventana
@@ -326,24 +327,36 @@ class VentanaMenu:
         self.ventana.configure(menu=self.miMenu)
         
         #Creando una sección/SubMenú esta es la barrita que aparecere arriba en la ventana
-        self.menuPrincipal = Menu(self.miMenu)
         self.miMenu.add_command(label="Cargar Archivo", command=self.cargarArchivo)
-        self.miMenu.add_command(label="Analizar", command=self.on_closing)
-        self.miMenu.add_command(label="Generar Reportes", command=self.generarReportes)
+        self.miMenu.add_command(label="Analizar", command=self.analizarArchivo)
 
-        #scrolledtext       
+        #menu bar with cascade 
+        self.menuCascade = Menu(self.miMenu, tearoff=False)
+        self.miMenu.add_cascade(label="Generar reportes", menu=self.menuCascade)
+        self.menuCascade.add_command(label="Reporte de Tokens", command=self.generarReporteTokens)
+        self.menuCascade.add_separator()
+        self.menuCascade.add_command(label="Reporte de erorres", command=self.generarReporteErrores)
+
+        #scrolledtext 1      
         self.text_Area1 = scrolledtext.ScrolledText(self.ventana,
                                                     wrap = tkinter.WORD,
-                                                    width = 30, 
-                                                    height = 13, 
-                                                    font = ("Times New Roman",
+                                                    width = 60, 
+                                                    height = 20, 
+                                                    font = ("Terminal",
                                                         15))
         self.text_Area1.configure(state = 'normal')
-        self.text_Area1.place(x=10, y = 90) 
+        self.text_Area1.place(x=10, y = 100) 
 
-        #Buttons
-        self.btnProcesar = Button(self.ventana, text="Abrir archivo", command=self.cargarArchivo)
-        self.btnProcesar.place(x=400, y = 10)
+        #scrolledtext 2
+        self.text_Area2 = scrolledtext.ScrolledText(self.ventana,
+                                                    wrap = tkinter.WORD,
+                                                    width = 30, 
+                                                    height = 20, 
+                                                    font = ("Terminal",
+                                                        15))
+        self.text_Area2.configure(state = 'disable')
+        self.text_Area2.place(x=700, y = 100) 
+
 
         self.ventana.mainloop()
 
@@ -352,19 +365,26 @@ class VentanaMenu:
         if messagebox.askokcancel("Cerrar Programa", "Seguro que desea Salir?"):
             self.ventana.quit()
 
-    def cargarArchivo(self):
+    def cargarArchivo(self): 
+        textoEntrada = abrirArchivo()
+        if textoEntrada != None:
+            self.text_Area1.delete("1.0", "end")
+            self.text_Area1.insert("1.0", textoEntrada)
+
+
+    def analizarArchivo(self):
         global listaErrores
         global listaTokens
         global estadoError
-        self.txt = None
-        self.txt = abrirArchivo()
+        self.txt = self.text_Area1.get("1.0", "end")
         if self.txt != None:
             self.txt += "~"
             print(self.txt)
             analizarArchivo(self.txt)
             print(listaTokens)
 
-    def generarReportes(self):
+
+    def generarReporteTokens(self):
         if(self.txt != None):
             #abrir o crear el reporte
             f = open('ReporteTokens.html','w', encoding='utf-8')
@@ -449,6 +469,13 @@ class VentanaMenu:
             f.close
             #Aquí se hace la magia de abrirlo automaticamente
             webbrowser.open_new_tab('ReporteTokens.html')
+        else:
+            print("No se ha cargado ningun archivo")
+            messagebox.showwarning('ADVERTENCIA', 'No se selecciono ningun archivo.')
+
+
+    def generarReporteErrores(self):
+        if(self.txt != None):
             f = open('ReporteErrores.html','w',encoding='utf-8')
             
             #Cuerpo del documento
@@ -491,6 +518,7 @@ class VentanaMenu:
                         <th>Caracter</th>
                         <th>Fila</th>
                         <th>Columna</th>
+                        <th>Mensaje de error</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -528,8 +556,6 @@ class VentanaMenu:
             f.write(cuerpo)
             f.close
             webbrowser.open_new_tab('ReporteErrores.html')
-            
         else:
             print("No se ha cargado ningun archivo")
             messagebox.showwarning('ADVERTENCIA', 'No se selecciono ningun archivo.')
-    
