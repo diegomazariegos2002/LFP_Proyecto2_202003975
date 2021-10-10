@@ -1,5 +1,5 @@
 #Libreria para interfaz grafica
-from tkinter import Tk, Button, filedialog, messagebox, Menu, scrolledtext
+from tkinter import Label, Tk, Button, filedialog, messagebox, Menu, scrolledtext
 import tkinter
 from typing import Text
 #Libreria creada
@@ -356,6 +356,10 @@ class VentanaMenu:
                                                         15))
         self.text_Area2.configure(state = 'disable')
         self.text_Area2.place(x=700, y = 100) 
+
+        #Label
+        self.label1 = Label(self.ventana, text="Diego Andre Mazariegos Barrientos")
+        self.label1.place( x = 10, y = 10)
 
 
         self.ventana.mainloop()
