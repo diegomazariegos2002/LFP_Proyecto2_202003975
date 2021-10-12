@@ -169,8 +169,9 @@ def analizarArchivo(entrada):
                         contComillaSimple = 0
                         #crear token porque estas comillas son de cierre
                         lexActual += c
-                        token = Token("Comentario multilinea", lexActual, "LeT = [A_Z, a_z, \.n, \.t, \.r, _] -> '''(LeT)*'''", fila, (columna-(len(lexActual)-1)))
-                        listaTokens.append(token)
+                        # Se reconoce el comentario multilinea pero se obvia en los la lista de tokens.
+                        # token = Token("Comentario multilinea", lexActual, "LeT = [A_Z, a_z, \.n, \.t, \.r, _] -> '''(LeT)*'''", fila, (columna-(len(lexActual)-1)))
+                        #listaTokens.append(token)
                         lexActual = ""
                         estado = 0
                 else:
@@ -188,8 +189,9 @@ def analizarArchivo(entrada):
             if cter != 10 and cter != 11:
                 lexActual += c
             elif cter == 10:
-                token = Token("Comentario de una sola línea", lexActual, "Let = [A_Z, a_z,\.t, _] -> #(Let)*(\.n)", fila, (columna-(len(lexActual)-1)))
-                listaTokens.append(token)
+                # Se reconoce el comentario de una sola línea pero se obvia en los la lista de tokens.
+                #token = Token("Comentario de una sola línea", lexActual, "Let = [A_Z, a_z,\.t, _] -> #(Let)*(\.n)", fila, (columna-(len(lexActual)-1)))
+                #listaTokens.append(token)
                 lexActual = ""
                 estado = 0
 
@@ -360,7 +362,8 @@ class VentanaMenu:
         #Label
         self.label1 = Label(self.ventana, text="Diego Andre Mazariegos Barrientos")
         self.label1.place( x = 10, y = 10)
-
+        self.label2 = Label(self.ventana, text = "202003975")
+        self.label2.place(x = 200, y = 10)
 
         self.ventana.mainloop()
 
@@ -476,7 +479,6 @@ class VentanaMenu:
         else:
             print("No se ha cargado ningun archivo")
             messagebox.showwarning('ADVERTENCIA', 'No se selecciono ningun archivo.')
-
 
     def generarReporteErrores(self):
         if(self.txt != None):
