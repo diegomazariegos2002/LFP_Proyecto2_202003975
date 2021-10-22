@@ -3,7 +3,7 @@ from tkinter import Label, Tk, Button, filedialog, messagebox, Menu, scrolledtex
 import tkinter
 from typing import Text
 #Libreria creada
-from PartesAnalizador import ErrorLexico, Token
+from PartesAnalizador import ErrorLexico, Token, ErrorSintactico
 #Libreria para abrir directamente los reportes
 import webbrowser
 
@@ -11,8 +11,13 @@ import webbrowser
 #=================================================Variables globales=================================================
 listaTokens = []
 listaErrores = []
-
+datos = {}
 estadoError = False
+reservadasDeclaracion = ["Palabra reservada Claves", "Palabra reservada Registros"]
+reservadasFuncion = []
+simbolos = []
+tk = Token()
+
 
 #====================================Declarando función para abrir un archivo========================================
 def abrirArchivo():
@@ -50,7 +55,7 @@ def isNumero(caracter):
     else:
         return False
 
-def analizarArchivo(entrada):
+def analisisLexico(entrada):
     global listaTokens
     global listaErrores
     global estadoError
@@ -74,7 +79,11 @@ def analizarArchivo(entrada):
         cter = ord(c)
 
         if c == "~": #Si ya se termino el archivo
-            pass
+            #Crear token de simbolos
+                lexActual += c
+                token = Token("Fin", lexActual, "~", fila, (columna-(len(lexActual)-1)))
+                listaTokens.append(token)
+                lexActual = ""
 
         elif estado == 0:
             if c == "'" or estadoComilla == True:
@@ -100,7 +109,7 @@ def analizarArchivo(entrada):
             elif c in simbolos:
                 #Crear token de simbolos
                 lexActual += c
-                token = Token("Simbolo", lexActual, "Sim = (=, [,],’,’, {,}, (,),’;’)", fila, (columna-(len(lexActual)-1)))
+                token = Token(f"Simbolo {lexActual}", lexActual, "Sim = (=, [,],’,’, {,}, (,),’;’)", fila, (columna-(len(lexActual)-1)))
                 listaTokens.append(token)
                 lexActual = ""
             elif c == '"':
@@ -204,7 +213,7 @@ def analizarArchivo(entrada):
                     # caracter no es una letra quiere decir que hasta el caracter actual llega el lexema.
                 if lexActual in reservadas:
                     #crear token - estado 4 aceptacion
-                    token = Token("Palabra reservada", lexActual, "Le = [A_Z, a_z] -> Palabra = Le+", fila, (columna-(len(lexActual)-1)))
+                    token = Token(f"Palabra reservada {lexActual}", lexActual, "Le = [A_Z, a_z] -> Palabra = Le+", fila, (columna-(len(lexActual)-1)))
                     listaTokens.append(token)
                     lexActual = ""
                     estado = 0
@@ -301,8 +310,160 @@ def analizarArchivo(entrada):
 
         cont += 1
         columna += 1
-            
-            
+                
+def generarErrorSintactico(mensaje):
+    global estadoError
+    global listaTokens
+    global tk
+    global listaErrores
+    errorSintactico = ErrorSintactico(tk.token,tk.fila,tk.columna, f"{mensaje}")
+    listaErrores.append(errorSintactico)
+    estadoError = True
+    listaTokens.pop(0)
+    tk = listaTokens[0]
+
+def analisisSintactico():
+    global reservadasDeclaracion
+    global reservadasFuncion
+    global simbolos
+    global estadoError
+    global tk
+    tk = listaTokens[0]
+
+    def inicio():
+        instrucciones()
+        print("analisis sintactico completado")
+
+
+    def instrucciones():
+        if tk.token == "Fin":
+            return
+        else:
+            instruccion()
+            instrucciones()
+
+
+    def instruccion():
+        global estadoError
+        if tk.token in reservadasDeclaracion:
+            declaracion()
+        elif tk.token in reservadasFuncion:
+            funcion()
+        else:
+            #Crear error y agregarlo a la lista
+            generarErrorSintactico("Syntactic error: se esperaba una palabra reservada.")
+
+
+    def declaracion():
+        global tk
+        if tk.token == "Palabra reservada Claves":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            declaracionTipo1()
+        else: #Palabra reservada Registro
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            declaracionTipo2()
+    def funcion():
+        pass
+
+
+    def declaracionTipo1():
+        global estadoError
+        global tk
+        if tk.token == "Simbolo =":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Simbolo [":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                cuerpoDeclaracionTipo1()
+                if tk.token == "Simbolo ]":
+                    listaTokens.pop(0)
+                    tk = listaTokens[0]
+                    #se acepta el comando de Claves
+                    print("comando de claves aceptado")
+                else:
+                    estadoError = True
+            else:
+                estadoError = True
+        else:
+            estadoError = True
+
+
+    def declaracionTipo2():
+        global estadoError
+        global tk
+        if tk.token == "Simbolo =":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Simbolo [":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                cuerpoDeclaracionTipo2()
+                if tk.token == "Simbolo ]":
+                    listaTokens.pop(0)
+                    tk = listaTokens[0]
+                    #Se acepta el comando de Registros
+                    print("comando de registros aceptados")
+                else:
+                    estadoError = True
+            else:
+                estadoError = True
+        else:
+            estadoError = True
+
+
+    def cuerpoDeclaracionTipo1():
+        global estadoError
+        global tk
+        if tk.token == "Cadena":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Simbolo ,":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                cuerpoDeclaracionTipo1()
+        else:
+            estadoError = True
+
+
+    def cuerpoDeclaracionTipo2():
+        global estadoError
+        global tk
+        if tk.token == "Simbolo {":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            filaCuerpoDeclaracionTipo2() 
+            if tk.token == "Simbolo }":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                if tk.token == "Simbolo {":
+                    cuerpoDeclaracionTipo2()
+            else:
+                estadoError = True
+        else:
+            estadoError = True
+
+
+    def filaCuerpoDeclaracionTipo2():
+        global estadoError
+        global tk
+        if tk.token == "Cadena" or tk.token == "Digito":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Simbolo ,":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                filaCuerpoDeclaracionTipo2()
+        else: 
+            estadoError = True
+    
+    
+
+    return inicio()
+
+
 class VentanaMenu:
     def __init__(self):
         self.txt = None
@@ -387,8 +548,9 @@ class VentanaMenu:
         if self.txt != None:
             self.txt += "~"
             print(self.txt)
-            analizarArchivo(self.txt)
+            analisisLexico(self.txt)
             print(listaTokens)
+            analisisSintactico()
 
 
     def generarReporteTokens(self):
@@ -497,7 +659,7 @@ class VentanaMenu:
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
                 integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-            <title>Reporte de Tokens</title>
+            <title>Reporte de errores</title>
             </head>
 
             <body style="background-color: lightseagreen;">
@@ -512,7 +674,7 @@ class VentanaMenu:
                 
                 <div class="row justify-content-md-center">
                 <div class="col-md-auto">
-                    <h2 style="text-decoration: underline tomato;">Tabla de errores léxicos</h2>
+                    <h2 style="text-decoration: underline tomato;">Tabla de errores</h2>
                 </div>
                 </div>
                 <div class="row justify-content-md-center">

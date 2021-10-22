@@ -17,3 +17,7 @@ class ErrorLexico:
         self.mensaje = mensaje
     def str(self):
         print(f"ERROR cter: {self.caracter}, F: {self.fila}, C: {self.columna}")
+
+class ErrorSintactico(ErrorLexico):
+    def __init__(self, caracter=None, fila=None, columna=None, mensaje=None):
+        super().__init__(caracter=caracter, fila=fila, columna=columna, mensaje=mensaje)
