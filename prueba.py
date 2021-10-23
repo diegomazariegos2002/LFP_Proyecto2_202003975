@@ -1,3 +1,4 @@
+#Forma de guardar datos
 datos = []
 lista_Claves = []
 lista_Registros = []
@@ -27,7 +28,7 @@ print(datos)
 
 print(datos[1][0], datos[2][0], datos[3][0])
 
-
+#Haciendo sumas de una columna dada.
 busquedaCol = "adios1"
 index = 0
 for item in datos[0]:

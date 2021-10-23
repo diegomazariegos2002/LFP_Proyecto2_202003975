@@ -11,7 +11,9 @@ import webbrowser
 #=================================================Variables globales=================================================
 listaTokens = []
 listaErrores = []
-datos = {}
+datos = []
+lista_Claves = []
+lista_Registros = []
 estadoError = False
 reservadasDeclaracion = ["Palabra reservada Claves", "Palabra reservada Registros"]
 reservadasFuncion = []
@@ -329,6 +331,13 @@ def analisisSintactico():
     global simbolos
     global estadoError
     global tk
+    global datos
+    global lista_Registros
+    global lista_Claves
+
+    datos = []
+    lista_Claves = []
+    lista_Registros = []
     tk = listaTokens[0]
 
     def inicio():
@@ -357,7 +366,7 @@ def analisisSintactico():
 
     def declaracion():
         global tk
-        if tk.token == "Palabra reservada Claves":
+        if tk.token == "Palabra reservada Claves": #entramos a palabra reservada claves
             listaTokens.pop(0)
             tk = listaTokens[0]
             declaracionTipo1()
@@ -372,17 +381,25 @@ def analisisSintactico():
     def declaracionTipo1():
         global estadoError
         global tk
+        global datos
+        global lista_Claves
         if tk.token == "Simbolo =":
             listaTokens.pop(0)
             tk = listaTokens[0]
             if tk.token == "Simbolo [":
                 listaTokens.pop(0)
                 tk = listaTokens[0]
+                #Se resetean los datos si ya existian algunos
+                datos = []
+                lista_Claves = []
                 cuerpoDeclaracionTipo1()
-                if tk.token == "Simbolo ]":
+                if tk.token == "Simbolo ]": #Se acepta el comando Claves
+                    #una vez aceptado se incorpora la lista de claves a los datos de modo que la posicion 0 sea la de la lista Claves
+                    if estadoError != True:
+                        datos.append(lista_Claves)
+                    #Parte de continuacion del analisis sintactico
                     listaTokens.pop(0)
                     tk = listaTokens[0]
-                    #se acepta el comando de Claves
                     print("comando de claves aceptado")
                 else:
                     generarErrorSintactico("Syntactic error: se esperaba ].")
@@ -418,7 +435,11 @@ def analisisSintactico():
     def cuerpoDeclaracionTipo1():
         global estadoError
         global tk
-        if tk.token == "Cadena":
+        global lista_Claves
+        if tk.token == "Cadena": 
+            #Se reconoce el token Cadena del comando claves por lo que se tiene que añadir a lista de claves
+            if estadoError != True:
+                lista_Claves.append(tk.lexema)
             listaTokens.pop(0)
             tk = listaTokens[0]
             if tk.token == "Simbolo ,":
@@ -432,6 +453,8 @@ def analisisSintactico():
     def cuerpoDeclaracionTipo2():
         global estadoError
         global tk
+        global datos
+        global lista_Registros
         if tk.token == "Simbolo {":
             listaTokens.pop(0)
             tk = listaTokens[0]
