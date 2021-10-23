@@ -1,6 +1,7 @@
 #Libreria para interfaz grafica
 from tkinter import Label, Tk, Button, filedialog, messagebox, Menu, scrolledtext
 import tkinter
+from tkinter.constants import TRUE
 from typing import Text
 #Libreria creada
 from PartesAnalizador import ErrorLexico, Token, ErrorSintactico
@@ -458,10 +459,17 @@ def analisisSintactico():
         if tk.token == "Simbolo {":
             listaTokens.pop(0)
             tk = listaTokens[0]
+            #limpiando datos
+            lista_Registros = []
             filaCuerpoDeclaracionTipo2() 
             if tk.token == "Simbolo }":
                 listaTokens.pop(0)
                 tk = listaTokens[0]
+                
+                #Una vez aceptados los registros de entrada se verifica si existen los campos claves donde se agregaran
+                if len(datos) != 0 and estadoError != True: #Si len(datos) es igual a 0 quiere decir que no existen campos claves
+                    datos.append(lista_Registros)
+
                 if tk.token == "Simbolo {":
                     cuerpoDeclaracionTipo2()
             else:
@@ -473,9 +481,15 @@ def analisisSintactico():
     def filaCuerpoDeclaracionTipo2():
         global estadoError
         global tk
+        global lista_Registros
         if tk.token == "Cadena" or tk.token == "Digito":
+            #Una vez aceptada la cadena o el digito se agrega a la lista de registros si no hay errores
+            if estadoError != True:
+                lista_Registros.append(tk.lexema)
+
             listaTokens.pop(0)
             tk = listaTokens[0]
+            
             if tk.token == "Simbolo ,":
                 listaTokens.pop(0)
                 tk = listaTokens[0]
