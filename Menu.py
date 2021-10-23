@@ -319,8 +319,9 @@ def generarErrorSintactico(mensaje):
     errorSintactico = ErrorSintactico(tk.token,tk.fila,tk.columna, f"{mensaje}")
     listaErrores.append(errorSintactico)
     estadoError = True
-    listaTokens.pop(0)
-    tk = listaTokens[0]
+    if tk.token != "Fin":
+        listaTokens.pop(0)
+        tk = listaTokens[0]
 
 def analisisSintactico():
     global reservadasDeclaracion
@@ -384,11 +385,11 @@ def analisisSintactico():
                     #se acepta el comando de Claves
                     print("comando de claves aceptado")
                 else:
-                    estadoError = True
+                    generarErrorSintactico("Syntactic error: se esperaba ].")
             else:
-                estadoError = True
+                generarErrorSintactico("Syntactic error: se esperaba [.")
         else:
-            estadoError = True
+            generarErrorSintactico("Syntactic error: se esperaba =.")
 
 
     def declaracionTipo2():
@@ -407,11 +408,11 @@ def analisisSintactico():
                     #Se acepta el comando de Registros
                     print("comando de registros aceptados")
                 else:
-                    estadoError = True
+                    generarErrorSintactico("Syntactic error: se esperaba ].")
             else:
-                estadoError = True
+                generarErrorSintactico("Syntactic error: se esperaba [.")
         else:
-            estadoError = True
+            generarErrorSintactico("Syntactic error: se esperaba =.")
 
 
     def cuerpoDeclaracionTipo1():
@@ -425,7 +426,7 @@ def analisisSintactico():
                 tk = listaTokens[0]
                 cuerpoDeclaracionTipo1()
         else:
-            estadoError = True
+            generarErrorSintactico("Syntactic error: se esperaba una cadena.")
 
 
     def cuerpoDeclaracionTipo2():
@@ -441,9 +442,9 @@ def analisisSintactico():
                 if tk.token == "Simbolo {":
                     cuerpoDeclaracionTipo2()
             else:
-                estadoError = True
+                generarErrorSintactico("Syntactic error: se esperaba {.")
         else:
-            estadoError = True
+            generarErrorSintactico("Syntactic error: se esperaba {.")
 
 
     def filaCuerpoDeclaracionTipo2():
@@ -457,7 +458,7 @@ def analisisSintactico():
                 tk = listaTokens[0]
                 filaCuerpoDeclaracionTipo2()
         else: 
-            estadoError = True
+            generarErrorSintactico("Syntactic error: se esperaba una cadena o un digito.")
     
     
 
