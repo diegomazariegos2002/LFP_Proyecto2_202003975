@@ -29,20 +29,11 @@ print(datos)
 print(datos[1][0], datos[2][0], datos[3][0])
 
 #Haciendo sumas de una columna dada.
-busquedaCol = "adios1"
-index = 0
-for item in datos[0]:
-    if item == busquedaCol:
-        break
-    index += 1
-cont = 1
-suma = 0
-while(cont <= (len(datos)-1)):
-    suma += datos[cont][index]
-    cont+=1
-
-print(suma)
-
-a = '20'
-b = '30'
-print(float(a) + float(b))
+fila = 1
+columna = 0
+while(fila < (len(datos))):
+    while(columna < len(datos[fila])):
+        print(datos[fila][columna])
+        columna += 1
+    columna = 0
+    fila += 1

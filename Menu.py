@@ -1,7 +1,7 @@
 #Libreria para interfaz grafica
 from tkinter import Label, Tk, Button, filedialog, messagebox, Menu, scrolledtext
 import tkinter
-from tkinter.constants import TRUE
+from tkinter.constants import COMMAND, TRUE
 from typing import Text
 #Libreria creada
 from PartesAnalizador import ErrorLexico, Token, ErrorSintactico
@@ -328,6 +328,96 @@ def generarErrorSintactico(mensaje):
         listaTokens.pop(0)
         tk = listaTokens[0]
 
+def exportarReporte(entrada):
+    global datos
+    if(entrada != None):
+        #abrir o crear el reporte
+        f = open('Reporte_Exportado_Datos.html','w', encoding='utf-8')
+        #Cuerpo del documento
+        cuerpo = '''<!doctype html>
+        <html lang="en">
+
+        <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <title>Reporte de datos</title>
+        </head>
+
+        <body style="background-color: lightseagreen;">
+        <div class="container-fluid container p-3 my-3 bg-dark text-white">
+            <div class="row">
+            <div class="col-12" style="text-align: center; ">
+                <h1>REPORTE DE DATOS</h1>
+            </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="background-color: rgb(255, 255, 255); ">
+            
+            <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <h2 style="text-decoration: underline tomato;">''' 
+        cuerpo += f'''{entrada}'''
+        cuerpo += '''</h2>
+            </div>
+            </div>
+            <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <table class="table table-bordered table-striped text-center table-hover table-responsive"
+                style="text-align: center; width: 600px;">
+                <thead>
+                    <tr class="table-dark">'''
+        for item in datos[0]:
+            cuerpo += f'''<th>{item}</th>'''
+        cuerpo += '''</tr>
+                </thead>
+                <tbody>
+                '''  
+        fila = 1
+        columna = 0
+        while(fila < (len(datos))):
+            while(columna < len(datos[fila])):
+                cuerpo += f'''
+                        <tr>
+                        <td class="table-success">{datos[fila][columna]}</td>
+                        </tr>
+                        '''
+                columna += 1
+            columna = 0
+            fila += 1
+
+        cuerpo += '''
+            </tbody>
+            </table>
+            </div>
+            </div>
+            <div class="container-fluid container p-3 my-3 bg-dark text-white">
+            <div class="row">
+            <div class="col-12" style="text-align: center; ">
+                <h1></h1>
+            </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+        </body>
+
+        </html>'''
+
+        f.write(cuerpo)
+        f.close
+        #Aquí se hace la magia de abrirlo automaticamente
+        webbrowser.open_new_tab('ReporteTokens.html')
+    else:
+        print("No se ha cargado ningun archivo")
+        messagebox.showwarning('ADVERTENCIA', 'Intente de nuevo.')
+
 def analisisSintactico(self):
     global reservadasDeclaracion
     global reservadasFuncion
@@ -403,8 +493,6 @@ def analisisSintactico(self):
             funcion_Tipo3(comando)
 
 
-    
-
     def funcion_Tipo1(comando):
         global estadoError
         global tk
@@ -465,14 +553,67 @@ def analisisSintactico(self):
                                     except:
                                         print("Error los valores de este campo no pueden ser promediados.")
                                         self.text_Area2.configure(state = 'normal')
-                                        self.text_Area2.insert("end", f"\n>>> Error los valores del campo proporcionado no pueden ser promediados.")
+                                        self.text_Area2.insert("end", f"\n>>> Funcion promedio: Error los valores del campo proporcionado no pueden ser promediados.")
                                         self.text_Area2.configure(state = 'disable')
                                 else:
                                     print("El campo ingresado no existe.")
                                     self.text_Area2.configure(state = 'normal')
-                                    self.text_Area2.insert("end", f"\n>>> El campo ingresado no existe.")
+                                    self.text_Area2.insert("end", f"\n>>> Funcion promedio: El campo ingresado no existe.")
                                     self.text_Area2.configure(state = 'disable')
-
+                            elif comando == "max":
+                                if cadenaEntrada in datos[0]:
+                                    try:
+                                        index = 0
+                                        for item in datos[0]: #Con este for conseguimos la posicion del campo en las columnas
+                                            if cadenaEntrada == item:
+                                                break
+                                            index += 1
+                                        cont = 1 #Utilizamos un contador para ir avanzando en las filas de la columna
+                                        lista = []
+                                        while(cont <= (len(datos)-1)): # Sumando los valores de la columna (campo)
+                                            lista.append(float(datos[cont][index]))
+                                            cont+=1
+                                        maxV = max(lista)
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>>{maxV}")
+                                        self.text_Area2.configure(state = 'disable')
+                                    except:
+                                        print("Error los valores de este campo no son numericos.")
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> Funcion max: Error los valores de este campo no son numericos.")
+                                        self.text_Area2.configure(state = 'disable')
+                                else:
+                                    print("El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n>>> Funcion max: El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'disable')
+                            elif comando == "min":
+                                if cadenaEntrada in datos[0]:
+                                    try:
+                                        index = 0
+                                        for item in datos[0]: #Con este for conseguimos la posicion del campo en las columnas
+                                            if cadenaEntrada == item:
+                                                break
+                                            index += 1
+                                        cont = 1 #Utilizamos un contador para ir avanzando en las filas de la columna
+                                        lista = []
+                                        while(cont <= (len(datos)-1)): # Sumando los valores de la columna (campo)
+                                            lista.append(float(datos[cont][index]))
+                                            cont+=1
+                                        minV = min(lista)
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>>{minV}")
+                                        self.text_Area2.configure(state = 'disable')
+                                    except:
+                                        print("Error los valores de este campo no son numericos.")
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> Funcion min: Error los valores de este campo no son numericos.")
+                                        self.text_Area2.configure(state = 'disable')
+                                else:
+                                    print("El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n>>> Funcion min: El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'disable')
                             
                     else:
                         generarErrorSintactico("Syntactic error: se esperaba ;.")                
