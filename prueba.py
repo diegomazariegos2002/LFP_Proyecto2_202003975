@@ -42,3 +42,7 @@ while(cont <= (len(datos)-1)):
     cont+=1
 
 print(suma)
+
+a = '20'
+b = '30'
+print(float(a) + float(b))

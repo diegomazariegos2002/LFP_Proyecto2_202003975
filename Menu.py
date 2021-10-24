@@ -17,10 +17,12 @@ lista_Claves = []
 lista_Registros = []
 estadoError = False
 reservadasDeclaracion = ["Palabra reservada Claves", "Palabra reservada Registros"]
-reservadasFuncion = []
+reservadasFuncion = ["Palabra reservada imprimir", "Palabra reservada imprimirln", "Palabra reservada conteo", 
+                    "Palabra reservada promedio", "Palabra reservada contarsi", "Palabra reservada datos",
+                    "Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte"]
 simbolos = []
 tk = Token()
-
+contImprimirln = 0 #Contador para completar la funcionalidad de imprimirln
 
 #====================================Declarando función para abrir un archivo========================================
 def abrirArchivo():
@@ -326,7 +328,7 @@ def generarErrorSintactico(mensaje):
         listaTokens.pop(0)
         tk = listaTokens[0]
 
-def analisisSintactico():
+def analisisSintactico(self):
     global reservadasDeclaracion
     global reservadasFuncion
     global simbolos
@@ -340,6 +342,10 @@ def analisisSintactico():
     lista_Claves = []
     lista_Registros = []
     tk = listaTokens[0]
+    #Se borra todo lo que tuviese la consola
+    self.text_Area2.configure(state = 'normal')
+    self.text_Area2.delete("1.0", "end")
+    self.text_Area2.configure(state = 'disable')
 
     def inicio():
         instrucciones()
@@ -375,7 +381,114 @@ def analisisSintactico():
             listaTokens.pop(0)
             tk = listaTokens[0]
             declaracionTipo2()
+    
+    
     def funcion():
+        #["Palabra reservada imprimir", "Palabra reservada imprimirln", "Palabra reservada conteo", 
+                    #"Palabra reservada promedio", "Palabra reservada contarsi", "Palabra reservada datos",
+                    #"Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte"]
+        global tk
+        comando = tk.lexema
+        if tk.token == "Palabra reservada imprimir" or tk.token == "Palabra reservada imprimirln" or tk.token == "Palabra reservada promedio" or tk.token == "Palabra reservada max" or tk.token == "Palabra reservada min" or tk.token == "Palabra reservada exportarReporte":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            funcion_Tipo1(comando)
+        elif tk.token == "Palabra reservada conteo" or tk.token == "Palabra reservada datos":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            funcion_Tipo2(comando)
+        else:
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            funcion_Tipo3(comando)
+
+
+    
+
+    def funcion_Tipo1(comando):
+        global estadoError
+        global tk
+        global datos
+        global contImprimirln
+        cadenaEntrada = ""
+        if tk.token == "Simbolo (":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Cadena":
+                cadenaEntrada = tk.lexema #Guardamos el valor que viene en el token Cadena
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                if tk.token == "Simbolo )":
+                    listaTokens.pop(0)
+                    tk = listaTokens[0]
+                    if tk.token == "Simbolo ;": #Estado de aceptacion de la entrada
+                        listaTokens.pop(0)  
+                        tk = listaTokens[0]
+                        #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
+                        if estadoError != True:
+                            if comando == "imprimir":
+                                self.text_Area2.configure(state = 'normal')
+                                self.text_Area2.insert("end", f"{cadenaEntrada}")
+                                self.text_Area2.configure(state = 'disable')
+                                contImprimirln = 0
+                            elif comando == "imprimirln":
+                                if contImprimirln == 0:
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n{cadenaEntrada}")
+                                    self.text_Area2.configure(state = 'disable')
+                                    contImprimirln = 1
+                                else:
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"{cadenaEntrada}")
+                                    self.text_Area2.configure(state = 'disable')
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n{cadenaEntrada}")
+                                    self.text_Area2.configure(state = 'disable')
+                                    contImprimirln = 0
+                            elif comando == "promedio":
+                                if cadenaEntrada in datos[0]:
+                                    try:
+                                        index = 0
+                                        for item in datos[0]: #Con este for conseguimos la posicion del campo en las columnas
+                                            if cadenaEntrada == item:
+                                                break
+                                            index += 1
+                                        cont = 1 #Utilizamos un contador para ir avanzando en las filas de la columna
+                                        suma = 0
+                                        while(cont <= (len(datos)-1)): # Sumando los valores de la columna (campo)
+                                            suma += float(datos[cont][index])
+                                            cont+=1
+                                        promedio = float(suma / (cont-1))
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>>{promedio}")
+                                        self.text_Area2.configure(state = 'disable')
+                                    except:
+                                        print("Error los valores de este campo no pueden ser promediados.")
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> Error los valores del campo proporcionado no pueden ser promediados.")
+                                        self.text_Area2.configure(state = 'disable')
+                                else:
+                                    print("El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n>>> El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'disable')
+
+                            
+                    else:
+                        generarErrorSintactico("Syntactic error: se esperaba ;.")                
+                else:
+                    generarErrorSintactico("Syntactic error: se esperaba ).")            
+            else: 
+                generarErrorSintactico("Syntactic error: se esperaba una cadena.")        
+        else:
+            generarErrorSintactico("Syntactic error: se esperaba (.")    
+
+
+    def funcion_Tipo2(comando):
+        pass
+
+
+    def funcion_Tipo3(comando):
         pass
 
 
@@ -384,6 +497,7 @@ def analisisSintactico():
         global tk
         global datos
         global lista_Claves
+        global contImprimirln
         if tk.token == "Simbolo =":
             listaTokens.pop(0)
             tk = listaTokens[0]
@@ -401,6 +515,7 @@ def analisisSintactico():
                     #Parte de continuacion del analisis sintactico
                     listaTokens.pop(0)
                     tk = listaTokens[0]
+                    contImprimirln = 0
                     print("comando de claves aceptado")
                 else:
                     generarErrorSintactico("Syntactic error: se esperaba ].")
@@ -413,6 +528,7 @@ def analisisSintactico():
     def declaracionTipo2():
         global estadoError
         global tk
+        global contImprimirln
         if tk.token == "Simbolo =":
             listaTokens.pop(0)
             tk = listaTokens[0]
@@ -424,6 +540,7 @@ def analisisSintactico():
                     listaTokens.pop(0)
                     tk = listaTokens[0]
                     #Se acepta el comando de Registros
+                    contImprimirln = 0
                     print("comando de registros aceptados")
                 else:
                     generarErrorSintactico("Syntactic error: se esperaba ].")
@@ -489,7 +606,7 @@ def analisisSintactico():
 
             listaTokens.pop(0)
             tk = listaTokens[0]
-            
+
             if tk.token == "Simbolo ,":
                 listaTokens.pop(0)
                 tk = listaTokens[0]
@@ -588,7 +705,7 @@ class VentanaMenu:
             print(self.txt)
             analisisLexico(self.txt)
             print(listaTokens)
-            analisisSintactico()
+            analisisSintactico(self)
 
 
     def generarReporteTokens(self):
