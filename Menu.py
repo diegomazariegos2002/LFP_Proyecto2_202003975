@@ -381,15 +381,15 @@ def exportarReporte(entrada):
         fila = 1
         columna = 0
         while(fila < (len(datos))):
+            cuerpo += "<tr>"
             while(columna < len(datos[fila])):
                 cuerpo += f'''
-                        <tr>
                         <td class="table-success">{datos[fila][columna]}</td>
-                        </tr>
                         '''
                 columna += 1
             columna = 0
             fila += 1
+            cuerpo += "</tr>"
 
         cuerpo += '''
             </tbody>
@@ -413,7 +413,7 @@ def exportarReporte(entrada):
         f.write(cuerpo)
         f.close
         #Aquí se hace la magia de abrirlo automaticamente
-        webbrowser.open_new_tab('ReporteTokens.html')
+        webbrowser.open_new_tab('Reporte_Exportado_Datos.html')
     else:
         print("No se ha cargado ningun archivo")
         messagebox.showwarning('ADVERTENCIA', 'Intente de nuevo.')
@@ -614,7 +614,8 @@ def analisisSintactico(self):
                                     self.text_Area2.configure(state = 'normal')
                                     self.text_Area2.insert("end", f"\n>>> Funcion min: El campo ingresado no existe.")
                                     self.text_Area2.configure(state = 'disable')
-                            
+                            elif comando == "exportarReporte":
+                                exportarReporte(cadenaEntrada)
                     else:
                         generarErrorSintactico("Syntactic error: se esperaba ;.")                
                 else:
