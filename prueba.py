@@ -1,3 +1,6 @@
+#Librería utilizada para graficar grafos
+from graphviz import Graph
+
 #Forma de guardar datos
 datos = []
 lista_Claves = []
@@ -24,9 +27,13 @@ lista_Registros.append(6)
 lista_Registros.append(7)
 lista_Registros.append(8)
 datos.append(list(lista_Registros))
+lista_Registros = []
+lista_Registros.append(1)
+lista_Registros.append(2)
+lista_Registros.append(3)
+lista_Registros.append(4)
+datos.append(list(lista_Registros))
 print(datos)
-
-print(datos[1][0], datos[2][0], datos[3][0])
 
 #Haciendo sumas de una columna dada.
 fila = 1
@@ -37,3 +44,16 @@ while(fila < (len(datos))):
         columna += 1
     columna = 0
     fila += 1
+
+dot = Graph(comment='The Round Table')
+dot.attr('node', shape = "plaintext")
+
+dot.node('titulo',label=f'Titulo',)
+
+dot.attr('node', shape = "rectangle")
+dot.node(f'1',f'1')
+dot.node(f'2',f'2')
+dot.node(f'3',f'3')
+dot.node(f'4',f'4')
+dot.edge(f'1',f'2',constraint = 'false')
+dot.render('Terreno', view=True)

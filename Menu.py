@@ -1,13 +1,13 @@
 #Libreria para interfaz grafica
 from tkinter import Label, Tk, Button, filedialog, messagebox, Menu, scrolledtext
 import tkinter
-from tkinter.constants import COMMAND, TRUE
 from typing import Text
 #Libreria creada
 from PartesAnalizador import ErrorLexico, Token, ErrorSintactico
 #Libreria para abrir directamente los reportes
 import webbrowser
-
+#Librería utilizada para graficar el arbol de derivación
+from graphviz import Graph
 
 #=================================================Variables globales=================================================
 listaTokens = []
@@ -16,13 +16,17 @@ datos = []
 lista_Claves = []
 lista_Registros = []
 estadoError = False
+contImprimirln = 0 #Contador para completar la funcionalidad de imprimirln
+tk = Token()
+contErrores = 0
+
 reservadasDeclaracion = ["Palabra reservada Claves", "Palabra reservada Registros"]
 reservadasFuncion = ["Palabra reservada imprimir", "Palabra reservada imprimirln", "Palabra reservada conteo", 
                     "Palabra reservada promedio", "Palabra reservada contarsi", "Palabra reservada datos",
                     "Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte"]
 simbolos = []
-tk = Token()
-contImprimirln = 0 #Contador para completar la funcionalidad de imprimirln
+
+
 
 #====================================Declarando función para abrir un archivo========================================
 def abrirArchivo():
@@ -233,7 +237,7 @@ def analisisLexico(entrada):
         #Cadenas
         elif estado == 5:
             lexActual += c
-            if isLetra(c) or cter == 32 or cter == 9 or cter == 95:
+            if (isLetra(c) or cter >= 32) and cter != 34:
                 pass
             elif '"': #Crear token estado = 4 - aceptacion
                 token = Token("Cadena", lexActual, "Le = [A_Z, a_z] -> Palabra = Le+", fila, (columna-(len(lexActual)-1)))
@@ -316,14 +320,20 @@ def analisisLexico(entrada):
         cont += 1
         columna += 1
                 
-def generarErrorSintactico(mensaje):
+def generarErrorSintactico(self, mensaje):
     global estadoError
     global listaTokens
     global tk
     global listaErrores
+    global contErrores
     errorSintactico = ErrorSintactico(tk.token,tk.fila,tk.columna, f"{mensaje}")
     listaErrores.append(errorSintactico)
     estadoError = True
+    if contErrores < 1:
+        self.text_Area2.configure(state = 'normal')
+        self.text_Area2.insert("end", f"\n>>> {mensaje} Caracter invalido: {tk.token} en la fila {tk.fila}")
+        self.text_Area2.configure(state = 'disable')
+        contErrores+=1
     if tk.token != "Fin":
         listaTokens.pop(0)
         tk = listaTokens[0]
@@ -458,7 +468,7 @@ def analisisSintactico(self):
             funcion()
         else:
             #Crear error y agregarlo a la lista
-            generarErrorSintactico("Syntactic error: se esperaba una palabra reservada.")
+            generarErrorSintactico(self,"Syntactic error: se esperaba una palabra reservada.")
 
 
     def declaracion():
@@ -515,6 +525,7 @@ def analisisSintactico(self):
                         #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
                         if estadoError != True:
                             if comando == "imprimir":
+                                cadenaEntrada = cadenaEntrada[1:]
                                 self.text_Area2.configure(state = 'normal')
                                 self.text_Area2.insert("end", f"{cadenaEntrada}")
                                 self.text_Area2.configure(state = 'disable')
@@ -548,7 +559,7 @@ def analisisSintactico(self):
                                             cont+=1
                                         promedio = float(suma / (cont-1))
                                         self.text_Area2.configure(state = 'normal')
-                                        self.text_Area2.insert("end", f"\n>>>{promedio}")
+                                        self.text_Area2.insert("end", f"\n>>> {promedio}")
                                         self.text_Area2.configure(state = 'disable')
                                     except:
                                         print("Error los valores de este campo no pueden ser promediados.")
@@ -617,21 +628,127 @@ def analisisSintactico(self):
                             elif comando == "exportarReporte":
                                 exportarReporte(cadenaEntrada)
                     else:
-                        generarErrorSintactico("Syntactic error: se esperaba ;.")                
+                        generarErrorSintactico(self,"Syntactic error: se esperaba ;.")                
                 else:
-                    generarErrorSintactico("Syntactic error: se esperaba ).")            
+                    generarErrorSintactico(self,"Syntactic error: se esperaba ).")            
             else: 
-                generarErrorSintactico("Syntactic error: se esperaba una cadena.")        
+                generarErrorSintactico(self,"Syntactic error: se esperaba una cadena.")        
         else:
-            generarErrorSintactico("Syntactic error: se esperaba (.")    
+            generarErrorSintactico(self,"Syntactic error: se esperaba (.")    
 
 
     def funcion_Tipo2(comando):
-        pass
+        global estadoError
+        global tk
+        global datos
+        global contImprimirln
+        if tk.token == "Simbolo (":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Simbolo )":
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                if tk.token == "Simbolo ;": #Estado de aceptacion de la entrada
+                    listaTokens.pop(0)  
+                    tk = listaTokens[0]
+                    #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
+                    if estadoError != True:
+                        if comando == "conteo":
+                            fila = 1
+                            columna = 0
+                            len_Registros = 0
+                            while(fila < (len(datos))):
+                                while(columna < len(datos[fila])):
+                                    len_Registros += 1
+                                    columna += 1
+                                columna = 0
+                                fila += 1
+                            self.text_Area2.configure(state = 'normal')
+                            self.text_Area2.insert("end", f"\n>>> {len_Registros}")
+                            self.text_Area2.configure(state = 'disable')
+                        if comando == "datos":
+                            fila = ""
+                            for item in datos:
+                                for items in item:
+                                    fila += str(items)
+                                    fila += " "
+                                self.text_Area2.configure(state = 'normal')
+                                self.text_Area2.insert("end", f"\n>>> {fila}")
+                                self.text_Area2.configure(state = 'disable')
+                                fila = ""
+                else:
+                        generarErrorSintactico(self,"Syntactic error: se esperaba ;.")                
+            else:
+                generarErrorSintactico(self,"Syntactic error: se esperaba ).") 
+        else:
+            generarErrorSintactico(self,"Syntactic error: se esperaba (.")    
 
 
     def funcion_Tipo3(comando):
-        pass
+        global estadoError
+        global tk
+        global datos
+        cadenaEntrada1 = ""
+        cadenaEntrada2 = ""
+        if tk.token == "Simbolo (":
+            listaTokens.pop(0)
+            tk = listaTokens[0]
+            if tk.token == "Cadena":
+                cadenaEntrada1 = tk.lexema #Guardamos el valor que viene en el token Cadena
+                listaTokens.pop(0)
+                tk = listaTokens[0]
+                if tk.token == "Simbolo ,":
+                    listaTokens.pop(0)
+                    tk = listaTokens[0]
+                    if tk.token == "Cadena" or tk.token == "Digito":
+                        cadenaEntrada2 = tk.lexema #Guardamos el valor que viene en el token Cadena
+                        listaTokens.pop(0)
+                        tk = listaTokens[0]
+                        if tk.token == "Simbolo )":
+                            listaTokens.pop(0)
+                            tk = listaTokens[0]
+                            if tk.token == "Simbolo ;":
+                                listaTokens.pop(0)
+                                tk = listaTokens[0]
+                                #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
+                                if cadenaEntrada1 in datos[0]:
+                                    try:
+                                        index = 0
+                                        for item in datos[0]: #Con este for conseguimos la posicion del campo en las columnas
+                                            if cadenaEntrada1 == item:
+                                                break
+                                            index += 1
+                                        cont = 1 #Utilizamos un contador para ir avanzando en las filas de la columna
+                                        contCoincidencias = 0
+                                        while(cont <= (len(datos)-1)): # Sumando los valores de la columna (campo)
+                                            if cadenaEntrada2 == datos[cont][index]:
+                                                contCoincidencias += 1
+                                            cont+=1
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> {contCoincidencias}")
+                                        self.text_Area2.configure(state = 'disable')
+                                    except:
+                                        print("Error los valores de este campo no pueden ser promediados.")
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> Funcion promedio: Error los valores del campo proporcionado no pueden ser promediados.")
+                                        self.text_Area2.configure(state = 'disable')
+                                else:
+                                    print("El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n>>> Funcion contarsi: El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'disable')
+                            else:
+                                generarErrorSintactico(self, "Syntactic error: se esperaba ;.")            
+                        else:
+                            generarErrorSintactico(self, "Syntactic error: se esperaba ).")        
+                    else:
+                        generarErrorSintactico(self,"Syntactic error: se esperaba una cadena o un digito.")
+                else:
+                    generarErrorSintactico(self, "Syntactic error: se esperaba , .")
+            else: 
+                generarErrorSintactico(self,"Syntactic error: se esperaba una cadena.")        
+        else:
+            generarErrorSintactico(self,"Syntactic error: se esperaba (.")  
 
 
     def declaracionTipo1():
@@ -660,11 +777,11 @@ def analisisSintactico(self):
                     contImprimirln = 0
                     print("comando de claves aceptado")
                 else:
-                    generarErrorSintactico("Syntactic error: se esperaba ].")
+                    generarErrorSintactico(self,"Syntactic error: se esperaba ].")
             else:
-                generarErrorSintactico("Syntactic error: se esperaba [.")
+                generarErrorSintactico(self,"Syntactic error: se esperaba [.")
         else:
-            generarErrorSintactico("Syntactic error: se esperaba =.")
+            generarErrorSintactico(self,"Syntactic error: se esperaba =.")
 
 
     def declaracionTipo2():
@@ -685,11 +802,11 @@ def analisisSintactico(self):
                     contImprimirln = 0
                     print("comando de registros aceptados")
                 else:
-                    generarErrorSintactico("Syntactic error: se esperaba ].")
+                    generarErrorSintactico(self,"Syntactic error: se esperaba ].")
             else:
-                generarErrorSintactico("Syntactic error: se esperaba [.")
+                generarErrorSintactico(self,"Syntactic error: se esperaba [.")
         else:
-            generarErrorSintactico("Syntactic error: se esperaba =.")
+            generarErrorSintactico(self,"Syntactic error: se esperaba =.")
 
 
     def cuerpoDeclaracionTipo1():
@@ -707,7 +824,7 @@ def analisisSintactico(self):
                 tk = listaTokens[0]
                 cuerpoDeclaracionTipo1()
         else:
-            generarErrorSintactico("Syntactic error: se esperaba una cadena.")
+            generarErrorSintactico(self,"Syntactic error: se esperaba una cadena.")
 
 
     def cuerpoDeclaracionTipo2():
@@ -732,9 +849,9 @@ def analisisSintactico(self):
                 if tk.token == "Simbolo {":
                     cuerpoDeclaracionTipo2()
             else:
-                generarErrorSintactico("Syntactic error: se esperaba {.")
+                generarErrorSintactico(self,"Syntactic error: se esperaba {.")
         else:
-            generarErrorSintactico("Syntactic error: se esperaba {.")
+            generarErrorSintactico(self,"Syntactic error: se esperaba {.")
 
 
     def filaCuerpoDeclaracionTipo2():
@@ -754,8 +871,7 @@ def analisisSintactico(self):
                 tk = listaTokens[0]
                 filaCuerpoDeclaracionTipo2()
         else: 
-            generarErrorSintactico("Syntactic error: se esperaba una cadena o un digito.")
-    
+            generarErrorSintactico(self,"Syntactic error: se esperaba una cadena o un digito.")
     
 
     return inicio()
@@ -793,7 +909,7 @@ class VentanaMenu:
         #menu bar with cascade 
         self.menuCascade = Menu(self.miMenu, tearoff=False)
         self.miMenu.add_cascade(label="Generar reportes", menu=self.menuCascade)
-        self.menuCascade.add_command(label="Reporte de Tokens", command=self.generarReporteTokens)
+        self.menuCascade.add_command(label="Reporte de Tokens", command=self.abrirReporteTokens)
         self.menuCascade.add_separator()
         self.menuCascade.add_command(label="Reporte de erorres", command=self.generarReporteErrores)
 
@@ -841,16 +957,40 @@ class VentanaMenu:
         global listaErrores
         global listaTokens
         global estadoError
+        global datos
+        global lista_Claves
+        global lista_Registros
+        global contImprimirln
+        global tk
+        global contErrores
+        #Reinciando variables
+        datos = []
+        lista_Claves = []
+        lista_Registros = []
+        contImprimirln = 0
+        tk = Token()
+        contErrores = 0
+        #Se borra todo lo que tuviese la consola
+        self.text_Area2.configure(state = 'normal')
+        self.text_Area2.delete("1.0", "end")
+        self.text_Area2.configure(state = 'disable')
         self.txt = self.text_Area1.get("1.0", "end")
-        if self.txt != None:
+        if self.txt != None: #Verificando si la entrada no esta vacía
             self.txt += "~"
             print(self.txt)
             analisisLexico(self.txt)
-            print(listaTokens)
-            analisisSintactico(self)
+            
+            self.generarReporteTokens()
+            if estadoError != True:
+                analisisSintactico(self)
+            else:
+                self.text_Area2.configure(state = 'normal')
+                self.text_Area2.insert("end", f"\n>>> El documento posee errores de sintaxis revisar y corregirlos e intentar mas tarde.")
+                self.text_Area2.configure(state = 'disable')
 
 
     def generarReporteTokens(self):
+        global listaTokens
         if(self.txt != None):
             #abrir o crear el reporte
             f = open('ReporteTokens.html','w', encoding='utf-8')
@@ -934,10 +1074,13 @@ class VentanaMenu:
             f.write(cuerpo)
             f.close
             #Aquí se hace la magia de abrirlo automaticamente
-            webbrowser.open_new_tab('ReporteTokens.html')
         else:
             print("No se ha cargado ningun archivo")
             messagebox.showwarning('ADVERTENCIA', 'No se selecciono ningun archivo.')
+
+    def abrirReporteTokens(self):
+        webbrowser.open_new_tab('ReporteTokens.html')
+
 
     def generarReporteErrores(self):
         if(self.txt != None):
