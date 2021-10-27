@@ -462,7 +462,10 @@ def analisisSintactico(self):
 
     def instruccion():
         global estadoError
+        global contImprimirln
+        
         if tk.token in reservadasDeclaracion:
+            contImprimirln = 0
             declaracion()
         elif tk.token in reservadasFuncion:
             funcion()
@@ -525,23 +528,22 @@ def analisisSintactico(self):
                         #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
                         if estadoError != True:
                             if comando == "imprimir":
-                                cadenaEntrada = cadenaEntrada[1:]
                                 self.text_Area2.configure(state = 'normal')
-                                self.text_Area2.insert("end", f"{cadenaEntrada}")
+                                self.text_Area2.insert("end", f"{cadenaEntrada[1:-1]}")
                                 self.text_Area2.configure(state = 'disable')
                                 contImprimirln = 0
                             elif comando == "imprimirln":
                                 if contImprimirln == 0:
                                     self.text_Area2.configure(state = 'normal')
-                                    self.text_Area2.insert("end", f"\n{cadenaEntrada}")
+                                    self.text_Area2.insert("end", f"\n{cadenaEntrada[1:-1]}")
                                     self.text_Area2.configure(state = 'disable')
                                     contImprimirln = 1
                                 else:
                                     self.text_Area2.configure(state = 'normal')
-                                    self.text_Area2.insert("end", f"{cadenaEntrada}")
+                                    self.text_Area2.insert("end", f"{cadenaEntrada[1:-1]}")
                                     self.text_Area2.configure(state = 'disable')
                                     self.text_Area2.configure(state = 'normal')
-                                    self.text_Area2.insert("end", f"\n{cadenaEntrada}")
+                                    self.text_Area2.insert("end", f"\n{cadenaEntrada[1:-1]}")
                                     self.text_Area2.configure(state = 'disable')
                                     contImprimirln = 0
                             elif comando == "promedio":
@@ -642,6 +644,7 @@ def analisisSintactico(self):
         global tk
         global datos
         global contImprimirln
+        contImprimirln = 0
         if tk.token == "Simbolo (":
             listaTokens.pop(0)
             tk = listaTokens[0]
@@ -654,17 +657,8 @@ def analisisSintactico(self):
                     #Una vez aceptado el comando podemos trabajar las funcionalidades de cada comando dependiendo del que venga
                     if estadoError != True:
                         if comando == "conteo":
-                            fila = 1
-                            columna = 0
-                            len_Registros = 0
-                            while(fila < (len(datos))):
-                                while(columna < len(datos[fila])):
-                                    len_Registros += 1
-                                    columna += 1
-                                columna = 0
-                                fila += 1
                             self.text_Area2.configure(state = 'normal')
-                            self.text_Area2.insert("end", f"\n>>> {len_Registros}")
+                            self.text_Area2.insert("end", f"\n>>> {len(datos)-1}")
                             self.text_Area2.configure(state = 'disable')
                         if comando == "datos":
                             fila = ""
@@ -688,6 +682,8 @@ def analisisSintactico(self):
         global estadoError
         global tk
         global datos
+        global contImprimirln
+        contImprimirln = 0
         cadenaEntrada1 = ""
         cadenaEntrada2 = ""
         if tk.token == "Simbolo (":
@@ -757,6 +753,7 @@ def analisisSintactico(self):
         global datos
         global lista_Claves
         global contImprimirln
+        contImprimirln = 0
         if tk.token == "Simbolo =":
             listaTokens.pop(0)
             tk = listaTokens[0]
@@ -788,6 +785,7 @@ def analisisSintactico(self):
         global estadoError
         global tk
         global contImprimirln
+        contImprimirln = 0
         if tk.token == "Simbolo =":
             listaTokens.pop(0)
             tk = listaTokens[0]
