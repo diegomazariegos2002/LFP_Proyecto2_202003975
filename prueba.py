@@ -50,10 +50,12 @@ dot.attr('node', shape = "plaintext")
 
 dot.node('titulo',label=f'Titulo',)
 
-dot.attr('node', shape = "rectangle")
+dot.attr('node', shape = "circle")
 dot.node(f'1',f'1')
 dot.node(f'2',f'2')
 dot.node(f'3',f'3')
+dot.edge('1','3', constraint = "false")
+dot.node('1','1')
 dot.node(f'4',f'4')
 dot.edge(f'1',f'2',constraint = 'false')
 dot.render('Terreno', view=True)

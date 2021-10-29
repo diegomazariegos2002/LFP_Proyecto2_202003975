@@ -23,9 +23,8 @@ contErrores = 0
 reservadasDeclaracion = ["Palabra reservada Claves", "Palabra reservada Registros"]
 reservadasFuncion = ["Palabra reservada imprimir", "Palabra reservada imprimirln", "Palabra reservada conteo", 
                     "Palabra reservada promedio", "Palabra reservada contarsi", "Palabra reservada datos",
-                    "Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte"]
+                    "Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte", "Palabra reservada sumar"]
 simbolos = []
-
 
 
 #====================================Declarando función para abrir un archivo========================================
@@ -80,7 +79,7 @@ def analisisLexico(entrada):
     contComillaSimple = 0
     simbolos = ['=', '[', ']', ',', '{', '}', '(', ')', ';']
     reservadas = ['Claves', 'Registros', 'imprimir', 'imprimirln', 'conteo',
-                'promedio', 'contarsi', 'datos', 'max', 'min', 'exportarReporte']
+                'promedio', 'contarsi', 'datos', 'max', 'min', 'exportarReporte', 'sumar']
     cont = 0
 
     #For inicial para ver caracter por caracter
@@ -437,6 +436,7 @@ def analisisSintactico(self):
     global datos
     global lista_Registros
     global lista_Claves
+    global dot
 
     datos = []
     lista_Claves = []
@@ -492,7 +492,7 @@ def analisisSintactico(self):
                     #"Palabra reservada max", "Palabra reservada min", "Palabra reservada exportarReporte"]
         global tk
         comando = tk.lexema
-        if tk.token == "Palabra reservada imprimir" or tk.token == "Palabra reservada imprimirln" or tk.token == "Palabra reservada promedio" or tk.token == "Palabra reservada max" or tk.token == "Palabra reservada min" or tk.token == "Palabra reservada exportarReporte":
+        if tk.token == "Palabra reservada imprimir" or tk.token == "Palabra reservada imprimirln" or tk.token == "Palabra reservada promedio" or tk.token == "Palabra reservada max" or tk.token == "Palabra reservada min" or tk.token == "Palabra reservada exportarReporte" or tk.token == "Palabra reservada sumar":
             listaTokens.pop(0)
             tk = listaTokens[0]
             funcion_Tipo1(comando)
@@ -532,6 +532,32 @@ def analisisSintactico(self):
                                 self.text_Area2.insert("end", f"{cadenaEntrada[1:-1]}")
                                 self.text_Area2.configure(state = 'disable')
                                 contImprimirln = 0
+                            elif comando == "sumar":
+                                if cadenaEntrada in datos[0]:
+                                    try:
+                                        index = 0
+                                        for item in datos[0]: #Con este for conseguimos la posicion del campo en las columnas
+                                            if cadenaEntrada == item:
+                                                break
+                                            index += 1
+                                        cont = 1 #Utilizamos un contador para ir avanzando en las filas de la columna
+                                        suma = 0
+                                        while(cont <= (len(datos)-1)): # Sumando los valores de la columna (campo)
+                                            suma += float(datos[cont][index])
+                                            cont+=1
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> {suma}")
+                                        self.text_Area2.configure(state = 'disable')
+                                    except:
+                                        print("Error los valores de este campo no pueden ser sumados.")
+                                        self.text_Area2.configure(state = 'normal')
+                                        self.text_Area2.insert("end", f"\n>>> Funcion promedio: Error los valores del campo proporcionado no pueden ser sumados.")
+                                        self.text_Area2.configure(state = 'disable')
+                                else:
+                                    print("El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'normal')
+                                    self.text_Area2.insert("end", f"\n>>> Funcion promedio: El campo ingresado no existe.")
+                                    self.text_Area2.configure(state = 'disable')
                             elif comando == "imprimirln":
                                 if contImprimirln == 0:
                                     self.text_Area2.configure(state = 'normal')
